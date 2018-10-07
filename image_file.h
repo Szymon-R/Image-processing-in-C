@@ -6,7 +6,7 @@
 #include <errno.h>
 #include <string.h>
 #include <stdlib.h>
-
+#include <Windows.h>
 #include "error_file.h"
 #pragma pack ( 1 )
 typedef struct
@@ -34,13 +34,20 @@ typedef struct
 
 } BmpInfoHeader;
 
+typedef struct
+{
+    uint8_t R;
+    uint8_t G;
+    uint8_t B;
 
+}  bmp_8_pixels;
 typedef struct
 {
     BmpFileHeader file_header;
     BmpInfoHeader info_header;
     void* pixels;
     char* name;
+    size_t pixel_size;
     //those information are in headers, but they will be used frequently
    /* uint32_t rows;
     uint32_t cols;
@@ -53,6 +60,6 @@ typedef struct
 
 image* read_image(const char* file_name,size_t file_name_length);
 int write_image(image* im);
-void print_image_info(image* im);
-
+int print_image_info(image* im);
+int delete_image(image* im);
 #endif // IMAGE_FILE_H_INCLUDED
