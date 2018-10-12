@@ -62,4 +62,5 @@ image* read_image(const char* file_name,size_t file_name_length);
 int write_image(image* im);
 int print_image_info(image* im);
 int delete_image(image* im);
+int save_image(image* im,char* name);
 #endif // IMAGE_FILE_H_INCLUDED

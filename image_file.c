@@ -32,6 +32,7 @@ image* read_image(const char* file_name, size_t file_name_length)
         im->name[i]=file_name[i];
     }
     im->pixels=malloc(im->info_header.height*im->info_header.width*im->info_header.bitDepth/8);
+    fread(im->pixels, 1, im->info_header.height*im->info_header.width*im->info_header.bitDepth/8, inFile);
     fclose(inFile);
     //print_image_info(im);
     return im;
@@ -63,4 +64,28 @@ int delete_image(image* im)
     }
     free(im->name);
     free(im);
+    return 1;
+}
+
+int save_image(image* im,char* name)
+{
+    FILE* file;
+    file=fopen(name,"wb");
+    if(!file)
+    {
+        error_handling("Error opening file: ");
+        return 0;
+    }
+    if(fwrite(&im->file_header,1,sizeof(BmpFileHeader),file)!=sizeof(BmpFileHeader))
+    {
+        error_handling("Error writing file header: ");
+        return 0;
+    }
+    if(fwrite(&im->info_header,1,sizeof(BmpInfoHeader),file)!=sizeof(BmpInfoHeader))
+    {
+        error_handling("Error writing info header: ");
+        return 0;
+    }
+    fwrite(im->pixels,1,(im->info_header.height*im->info_header.width*im->info_header.bitDepth/8),file);
+    return 1;
 }
